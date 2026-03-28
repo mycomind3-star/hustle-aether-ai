@@ -137,9 +137,14 @@ const Admin = () => {
             <span className="font-heading text-lg font-bold text-foreground">AetherHustle</span>
             <span className="text-primary font-heading font-bold text-sm">ADMIN</span>
           </div>
-          <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard")}>
-            <ArrowLeft className="w-4 h-4 mr-2" /> Dashboard
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={() => navigate("/evolution")}>
+              <Sparkles className="w-4 h-4 mr-2" /> Evolution
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard")}>
+              <ArrowLeft className="w-4 h-4 mr-2" /> Dashboard
+            </Button>
+          </div>
         </div>
       </header>
 
