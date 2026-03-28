@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Zap, Shield, Users, Send, Loader2, ArrowLeft, CheckCircle, XCircle,
-  Activity, Clock, RefreshCw, AlertTriangle, Play, BarChart3,
+  Activity, Clock, RefreshCw, AlertTriangle, Play, BarChart3, Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
