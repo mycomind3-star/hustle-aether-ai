@@ -1,10 +1,26 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Zap, TrendingUp, DollarSign } from "lucide-react";
+import { ArrowRight, Zap, TrendingUp, DollarSign, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import type { HomepageVariants } from "@/hooks/use-homepage-variants";
 
-const HeroSection = () => {
+interface HeroSectionProps {
+  variants: HomepageVariants;
+  onTrack: (event: string, data?: any, variantId?: string) => void;
+}
+
+const HeroSection = ({ variants, onTrack }: HeroSectionProps) => {
   const navigate = useNavigate();
+
+  const headline = variants.heroHeadline?.metadata || { line1: "AI That", line2: "Prints Money", line3: "Daily" };
+  const subtext = variants.heroSubtext?.text || "Get personalized, AI-curated money-making strategies delivered to your inbox every morning. Turn insights into income with AetherHustle AI.";
+  const badge = variants.heroBadge?.text || "Trusted by 12,000+ hustlers worldwide";
+  const ctaText = variants.ctaText?.text || "Start Making Money";
+
+  const handleCtaClick = () => {
+    onTrack("button_click", { button: "hero_cta", cta: ctaText }, variants.ctaText?.id);
+    navigate("/auth");
+  };
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -28,21 +44,20 @@ const HeroSection = () => {
             className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 mb-8"
           >
             <Zap className="w-4 h-4 text-primary" />
-            <span className="text-sm text-muted-foreground">Trusted by 12,000+ hustlers worldwide</span>
+            <span className="text-sm text-muted-foreground">{badge}</span>
           </motion.div>
 
           {/* Headline */}
           <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6">
-            <span className="text-foreground">AI That</span>
+            <span className="text-foreground">{headline.line1}</span>
             <br />
-            <span className="text-gradient">Prints Money</span>
+            <span className="text-gradient">{headline.line2}</span>
             <br />
-            <span className="text-foreground">Daily</span>
+            <span className="text-foreground">{headline.line3}</span>
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-            Get personalized, AI-curated money-making strategies delivered to your inbox every morning. 
-            Turn insights into income with AetherHustle AI.
+            {subtext}
           </p>
 
           {/* CTA buttons */}
@@ -50,15 +65,18 @@ const HeroSection = () => {
             <Button
               size="lg"
               className="gradient-primary text-primary-foreground font-semibold text-lg px-8 py-6 glow-green hover:opacity-90 transition-opacity"
-              onClick={() => navigate("/auth")}
+              onClick={handleCtaClick}
             >
-              Start Making Money <ArrowRight className="ml-2 w-5 h-5" />
+              {ctaText} <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
             <Button
               variant="outline"
               size="lg"
               className="border-border text-foreground font-medium text-lg px-8 py-6 hover:bg-card"
-              onClick={() => document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() => {
+                onTrack("button_click", { button: "view_pricing" });
+                document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" });
+              }}
             >
               View Pricing
             </Button>
@@ -82,6 +100,17 @@ const HeroSection = () => {
                 <div className="text-xs text-muted-foreground">{stat.label}</div>
               </div>
             ))}
+          </motion.div>
+
+          {/* Powered by AI badge */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2 }}
+            className="mt-12 inline-flex items-center gap-1.5 text-xs text-muted-foreground/60"
+          >
+            <Sparkles className="w-3 h-3" />
+            <span>Powered by AI · Self-optimizing for maximum conversions</span>
           </motion.div>
         </motion.div>
       </div>

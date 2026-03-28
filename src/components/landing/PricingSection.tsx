@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Check, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import type { HomepageVariants } from "@/hooks/use-homepage-variants";
 
 const tiers = [
   {
@@ -40,8 +41,14 @@ const tiers = [
   },
 ];
 
-const PricingSection = () => {
+interface PricingSectionProps {
+  variants: HomepageVariants;
+  onTrack: (event: string, data?: any, variantId?: string) => void;
+}
+
+const PricingSection = ({ variants, onTrack }: PricingSectionProps) => {
   const navigate = useNavigate();
+  const headline = variants.pricingHeadline?.text || "Choose Your Hustle Level";
 
   return (
     <section id="pricing" className="py-24 relative">
@@ -54,7 +61,7 @@ const PricingSection = () => {
           className="text-center mb-16"
         >
           <h2 className="font-heading text-3xl md:text-5xl font-bold mb-4">
-            Choose Your <span className="text-gradient">Hustle Level</span>
+            <span className="text-gradient">{headline}</span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
             Every plan comes with a 7-day money-back guarantee. No risk, only rewards.
@@ -70,9 +77,7 @@ const PricingSection = () => {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
               className={`rounded-xl p-8 relative ${
-                tier.popular
-                  ? "glass-strong glow-green border-primary/30"
-                  : "glass"
+                tier.popular ? "glass-strong glow-green border-primary/30" : "glass"
               }`}
             >
               {tier.popular && (
@@ -106,7 +111,10 @@ const PricingSection = () => {
                     ? "gradient-primary text-primary-foreground hover:opacity-90"
                     : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                 } transition-opacity`}
-                onClick={() => navigate("/auth")}
+                onClick={() => {
+                  onTrack("button_click", { button: "pricing_cta", tier: tier.name }, variants.pricingHeadline?.id);
+                  navigate("/auth");
+                }}
               >
                 {tier.cta}
               </Button>

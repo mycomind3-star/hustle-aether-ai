@@ -1,4 +1,4 @@
-import { Zap } from "lucide-react";
+import { Zap, Sparkles } from "lucide-react";
 
 const FooterSection = () => (
   <footer className="border-t border-border py-12">
@@ -10,7 +10,13 @@ const FooterSection = () => (
           </div>
           <span className="font-heading font-bold text-foreground">AetherHustle AI</span>
         </div>
-        <p className="text-sm text-muted-foreground">© 2026 AetherHustle AI. All rights reserved.</p>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground/50">
+            <Sparkles className="w-3 h-3" />
+            <span>Self-optimizing with AI</span>
+          </div>
+          <p className="text-sm text-muted-foreground">© 2026 AetherHustle AI. All rights reserved.</p>
+        </div>
       </div>
     </div>
   </footer>

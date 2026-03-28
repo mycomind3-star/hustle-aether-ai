@@ -62,6 +62,131 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_metrics: {
+        Row: {
+          button_clicks: number | null
+          click_rate: number | null
+          conversion_rate: number | null
+          created_at: string
+          date: string
+          id: string
+          metadata: Json | null
+          new_signups: number | null
+          open_rate: number | null
+          page_views: number | null
+          stripe_revenue: number | null
+          total_subscribers: number | null
+        }
+        Insert: {
+          button_clicks?: number | null
+          click_rate?: number | null
+          conversion_rate?: number | null
+          created_at?: string
+          date?: string
+          id?: string
+          metadata?: Json | null
+          new_signups?: number | null
+          open_rate?: number | null
+          page_views?: number | null
+          stripe_revenue?: number | null
+          total_subscribers?: number | null
+        }
+        Update: {
+          button_clicks?: number | null
+          click_rate?: number | null
+          conversion_rate?: number | null
+          created_at?: string
+          date?: string
+          id?: string
+          metadata?: Json | null
+          new_signups?: number | null
+          open_rate?: number | null
+          page_views?: number | null
+          stripe_revenue?: number | null
+          total_subscribers?: number | null
+        }
+        Relationships: []
+      }
+      homepage_variants: {
+        Row: {
+          conversions: number | null
+          created_at: string
+          created_by: string | null
+          id: string
+          impressions: number | null
+          is_active: boolean | null
+          is_archived: boolean | null
+          last_updated: string | null
+          performance_score: number | null
+          section_type: string
+          variant_metadata: Json | null
+          variant_text: string
+        }
+        Insert: {
+          conversions?: number | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          impressions?: number | null
+          is_active?: boolean | null
+          is_archived?: boolean | null
+          last_updated?: string | null
+          performance_score?: number | null
+          section_type: string
+          variant_metadata?: Json | null
+          variant_text: string
+        }
+        Update: {
+          conversions?: number | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          impressions?: number | null
+          is_active?: boolean | null
+          is_archived?: boolean | null
+          last_updated?: string | null
+          performance_score?: number | null
+          section_type?: string
+          variant_metadata?: Json | null
+          variant_text?: string
+        }
+        Relationships: []
+      }
+      interaction_events: {
+        Row: {
+          created_at: string
+          event_data: Json | null
+          event_type: string
+          id: string
+          session_id: string | null
+          variant_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          session_id?: string | null
+          variant_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          session_id?: string | null
+          variant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interaction_events_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "homepage_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       newsletters: {
         Row: {
           automation_run_id: string | null
