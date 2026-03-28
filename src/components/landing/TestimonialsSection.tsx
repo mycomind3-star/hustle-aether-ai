@@ -1,31 +1,37 @@
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
+import type { HomepageVariants } from "@/hooks/use-homepage-variants";
 
-const testimonials = [
-  {
-    name: "Sarah Chen",
-    role: "E-commerce Entrepreneur",
-    text: "AetherHustle AI helped me find a niche that now generates $8K/month in passive income. The AI insights are genuinely game-changing.",
-    avatar: "SC",
-    revenue: "$8K/mo",
-  },
-  {
-    name: "Marcus Williams",
-    role: "Freelance Developer",
-    text: "I was skeptical at first, but the personalized hustle recommendations were spot on. Landed 3 new clients in my first week.",
-    avatar: "MW",
-    revenue: "$12K/mo",
-  },
-  {
-    name: "Elena Rodriguez",
-    role: "Content Creator",
-    text: "The premium tier is worth every penny. The AI-generated strategies are incredibly specific and actionable. My income doubled.",
-    avatar: "ER",
-    revenue: "$15K/mo",
-  },
+const defaultTestimonials = [
+  { text: "AetherHustle AI helped me find a niche that now generates $8K/month in passive income.", metadata: { name: "Sarah Chen", role: "E-commerce Entrepreneur", avatar: "SC", revenue: "$8K/mo" } },
+  { text: "I was skeptical at first, but the personalized hustle recommendations were spot on.", metadata: { name: "Marcus Williams", role: "Freelance Developer", avatar: "MW", revenue: "$12K/mo" } },
+  { text: "The premium tier is worth every penny. My income doubled in two months.", metadata: { name: "Elena Rodriguez", role: "Content Creator", avatar: "ER", revenue: "$15K/mo" } },
 ];
 
-const TestimonialsSection = () => {
+interface TestimonialsSectionProps {
+  variants: HomepageVariants;
+  onTrack: (event: string, data?: any, variantId?: string) => void;
+}
+
+const TestimonialsSection = ({ variants, onTrack }: TestimonialsSectionProps) => {
+  const testimonials = variants.testimonials.length > 0
+    ? variants.testimonials.map((t) => ({
+        text: t.text,
+        name: t.metadata?.name || "Happy Customer",
+        role: t.metadata?.role || "Entrepreneur",
+        avatar: t.metadata?.avatar || "HC",
+        revenue: t.metadata?.revenue || "$5K/mo",
+        id: t.id,
+      }))
+    : defaultTestimonials.map((t) => ({
+        text: t.text,
+        name: t.metadata.name,
+        role: t.metadata.role,
+        avatar: t.metadata.avatar,
+        revenue: t.metadata.revenue,
+        id: undefined,
+      }));
+
   return (
     <section className="py-24 relative">
       <div className="container px-4">
@@ -46,12 +52,13 @@ const TestimonialsSection = () => {
         <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {testimonials.map((t, i) => (
             <motion.div
-              key={t.name}
+              key={i}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.15 }}
               className="glass rounded-xl p-6 hover:glow-green-sm transition-shadow duration-500"
+              onMouseEnter={() => onTrack("button_click", { element: "testimonial", index: i }, t.id)}
             >
               <div className="flex gap-1 mb-4">
                 {[...Array(5)].map((_, j) => (
