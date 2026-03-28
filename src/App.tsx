@@ -8,6 +8,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import Preferences from "./pages/Preferences";
+import Evolution from "./pages/Evolution";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/preferences" element={<Preferences />} />
+          <Route path="/evolution" element={<Evolution />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
