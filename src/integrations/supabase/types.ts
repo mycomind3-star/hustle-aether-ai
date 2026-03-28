@@ -14,44 +14,112 @@ export type Database = {
   }
   public: {
     Tables: {
+      automation_logs: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          emails_failed: number | null
+          emails_sent: number | null
+          error_message: string | null
+          id: string
+          metadata: Json | null
+          retries_attempted: number | null
+          run_type: string
+          started_at: string
+          status: string
+          subscribers_processed: number | null
+          subscribers_total: number | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          emails_failed?: number | null
+          emails_sent?: number | null
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          retries_attempted?: number | null
+          run_type: string
+          started_at?: string
+          status?: string
+          subscribers_processed?: number | null
+          subscribers_total?: number | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          emails_failed?: number | null
+          emails_sent?: number | null
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          retries_attempted?: number | null
+          run_type?: string
+          started_at?: string
+          status?: string
+          subscribers_processed?: number | null
+          subscribers_total?: number | null
+        }
+        Relationships: []
+      }
       newsletters: {
         Row: {
+          automation_run_id: string | null
           content_html: string
           created_at: string
           created_by: string | null
           id: string
           is_global: boolean | null
           issue_number: number
+          send_attempts: number | null
+          send_error: string | null
+          send_status: string | null
           sent_at: string | null
           summary: string | null
           target_user_id: string | null
           title: string
         }
         Insert: {
+          automation_run_id?: string | null
           content_html: string
           created_at?: string
           created_by?: string | null
           id?: string
           is_global?: boolean | null
           issue_number?: number
+          send_attempts?: number | null
+          send_error?: string | null
+          send_status?: string | null
           sent_at?: string | null
           summary?: string | null
           target_user_id?: string | null
           title: string
         }
         Update: {
+          automation_run_id?: string | null
           content_html?: string
           created_at?: string
           created_by?: string | null
           id?: string
           is_global?: boolean | null
           issue_number?: number
+          send_attempts?: number | null
+          send_error?: string | null
+          send_status?: string | null
           sent_at?: string | null
           summary?: string | null
           target_user_id?: string | null
           title?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "newsletters_automation_run_id_fkey"
+            columns: ["automation_run_id"]
+            isOneToOne: false
+            referencedRelation: "automation_logs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
