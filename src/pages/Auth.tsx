@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Zap, Mail, Lock, User, ArrowLeft } from "lucide-react";
+import { Zap, Mail, Lock, User, ArrowLeft, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
@@ -16,9 +16,17 @@ const Auth = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session && event !== "INITIAL_SESSION") {
+        navigate("/dashboard");
+      }
+    });
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) navigate("/dashboard");
     });
+
+    return () => subscription.unsubscribe();
   }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -35,7 +43,10 @@ const Auth = () => {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { data: { full_name: name } },
+          options: {
+            data: { full_name: name },
+            emailRedirectTo: window.location.origin,
+          },
         });
         if (error) throw error;
         toast.success("Check your email to confirm your account!");
@@ -120,7 +131,7 @@ const Auth = () => {
               disabled={loading}
               className="w-full gradient-primary text-primary-foreground font-semibold py-5 hover:opacity-90 transition-opacity"
             >
-              {loading ? "Loading..." : isLogin ? "Sign In" : "Create Account"}
+              {loading ? <><Loader2 className="mr-2 w-4 h-4 animate-spin" /> Loading...</> : isLogin ? "Sign In" : "Create Account"}
             </Button>
           </form>
 

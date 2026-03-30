@@ -111,4 +111,27 @@
       linear-gradient(90deg, hsl(var(--border) / 0.3) 1px, transparent 1px);
     background-size: 60px 60px;
   }
+
+  .newsletter-content {
+    @apply text-foreground;
+  }
+
+  .newsletter-content h1,
+  .newsletter-content h2,
+  .newsletter-content h3 {
+    @apply text-foreground font-heading;
+  }
+
+  .newsletter-content a {
+    @apply text-primary hover:underline;
+  }
+
+  .newsletter-content p {
+    @apply text-secondary-foreground leading-relaxed;
+  }
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
 }
