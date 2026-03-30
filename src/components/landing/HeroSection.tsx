@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Zap, TrendingUp, DollarSign, Sparkles } from "lucide-react";
+import { ArrowRight, Zap, TrendingUp, DollarSign, Sparkles, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import type { HomepageVariants } from "@/hooks/use-homepage-variants";
@@ -23,11 +23,12 @@ const HeroSection = ({ variants, onTrack }: HeroSectionProps) => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background effects */}
-      <div className="absolute inset-0 grid-pattern opacity-40" />
+      <div className="absolute inset-0 grid-pattern opacity-30" />
       <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-primary/5 blur-[120px] animate-pulse-glow" />
       <div className="absolute bottom-1/4 right-1/4 w-72 h-72 rounded-full bg-primary/8 blur-[100px] animate-pulse-glow" style={{ animationDelay: "1.5s" }} />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/3 blur-[200px]" />
 
       <div className="container relative z-10 px-4 py-20">
         <motion.div
@@ -41,30 +42,62 @@ const HeroSection = ({ variants, onTrack }: HeroSectionProps) => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 mb-8"
+            className="inline-flex items-center gap-2 glass rounded-full px-5 py-2.5 mb-8"
           >
-            <Zap className="w-4 h-4 text-primary" />
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary" />
+            </span>
             <span className="text-sm text-muted-foreground">{badge}</span>
           </motion.div>
 
           {/* Headline */}
           <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6">
-            <span className="text-foreground">{headline.line1}</span>
-            <br />
-            <span className="text-gradient">{headline.line2}</span>
-            <br />
-            <span className="text-foreground">{headline.line3}</span>
+            <motion.span
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="text-foreground block"
+            >
+              {headline.line1}
+            </motion.span>
+            <motion.span
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.45 }}
+              className="text-gradient block"
+            >
+              {headline.line2}
+            </motion.span>
+            <motion.span
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="text-foreground block"
+            >
+              {headline.line3}
+            </motion.span>
           </h1>
 
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7 }}
+            className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed"
+          >
             {subtext}
-          </p>
+          </motion.p>
 
           {/* CTA buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
+          >
             <Button
               size="lg"
-              className="gradient-primary text-primary-foreground font-semibold text-lg px-8 py-6 glow-green hover:opacity-90 transition-opacity"
+              className="gradient-primary text-primary-foreground font-semibold text-lg px-8 py-6 glow-green hover:opacity-90 transition-all hover:scale-[1.02]"
               onClick={handleCtaClick}
             >
               {ctaText} <ArrowRight className="ml-2 w-5 h-5" />
@@ -72,7 +105,7 @@ const HeroSection = ({ variants, onTrack }: HeroSectionProps) => {
             <Button
               variant="outline"
               size="lg"
-              className="border-border text-foreground font-medium text-lg px-8 py-6 hover:bg-card"
+              className="border-border text-foreground font-medium text-lg px-8 py-6 hover:bg-card transition-colors"
               onClick={() => {
                 onTrack("button_click", { button: "view_pricing" });
                 document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" });
@@ -80,19 +113,20 @@ const HeroSection = ({ variants, onTrack }: HeroSectionProps) => {
             >
               View Pricing
             </Button>
-          </div>
+          </motion.div>
 
           {/* Stats */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.6 }}
-            className="grid grid-cols-3 gap-6 max-w-xl mx-auto"
+            transition={{ delay: 0.9, duration: 0.6 }}
+            className="grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-2xl mx-auto"
           >
             {[
               { icon: DollarSign, value: "$2.4M+", label: "Revenue Generated" },
               { icon: TrendingUp, value: "94%", label: "Success Rate" },
               { icon: Zap, value: "50K+", label: "Hustles Delivered" },
+              { icon: Users, value: "12K+", label: "Active Hustlers" },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
                 <stat.icon className="w-5 h-5 text-primary mx-auto mb-1" />
