@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
-import { Zap, Crown, TrendingUp, Newspaper, Sparkles, LogOut, ArrowRight, Settings, Loader2 } from "lucide-react";
+import { Zap, Newspaper, Sparkles, LogOut, ArrowRight, Settings, Loader2, Flame, CalendarDays, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import PremiumInsights from "@/components/dashboard/PremiumInsights";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -14,14 +15,12 @@ const Dashboard = () => {
   const [latestNewsletter, setLatestNewsletter] = useState<any>(null);
   const [generatedHtml, setGeneratedHtml] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [totalIssues, setTotalIssues] = useState(0);
 
   useEffect(() => {
     const init = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        navigate("/auth");
-        return;
-      }
+      if (!user) { navigate("/auth"); return; }
 
       const [profileRes, newslettersRes] = await Promise.all([
         supabase.from("profiles").select("*").eq("id", user.id).single(),
@@ -30,13 +29,16 @@ const Dashboard = () => {
           .select("*")
           .or(`target_user_id.eq.${user.id},is_global.eq.true`)
           .order("created_at", { ascending: false })
-          .limit(10),
+          .limit(20),
       ]);
 
       if (profileRes.data) setProfile(profileRes.data);
-      if (newslettersRes.data && newslettersRes.data.length > 0) {
-        setLatestNewsletter(newslettersRes.data[0]);
-        setNewsletters(newslettersRes.data.slice(1));
+      if (newslettersRes.data) {
+        setTotalIssues(newslettersRes.data.length);
+        if (newslettersRes.data.length > 0) {
+          setLatestNewsletter(newslettersRes.data[0]);
+          setNewsletters(newslettersRes.data.slice(1));
+        }
       }
       setLoading(false);
     };
@@ -48,16 +50,11 @@ const Dashboard = () => {
     setGeneratedHtml(null);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        toast.error("Please sign in first");
-        navigate("/auth");
-        return;
-      }
+      if (!session) { toast.error("Please sign in first"); navigate("/auth"); return; }
 
       const { data, error } = await supabase.functions.invoke("generate-newsletter", {
         body: { mode: "single" },
       });
-
       if (error) throw error;
 
       if (data?.newsletter) {
@@ -79,6 +76,7 @@ const Dashboard = () => {
   };
 
   const userTier = profile?.subscription_tier || "free";
+  const memberSince = profile?.created_at ? new Date(profile.created_at).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "";
 
   if (loading) {
     return (
@@ -101,8 +99,12 @@ const Dashboard = () => {
             <span className="text-primary font-heading font-bold text-sm">AI</span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-xs font-medium px-3 py-1 rounded-full bg-secondary text-secondary-foreground capitalize">
-              {userTier} tier
+            <span className={`text-xs font-medium px-3 py-1 rounded-full capitalize ${
+              userTier === "premium" ? "gradient-primary text-primary-foreground" :
+              userTier === "basic" ? "bg-primary/20 text-primary" :
+              "bg-secondary text-secondary-foreground"
+            }`}>
+              {userTier === "premium" ? "⭐ Premium" : userTier === "basic" ? "✦ Basic" : "Free"} 
             </span>
             <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground" onClick={() => navigate("/preferences")}>
               <Settings className="w-4 h-4" />
@@ -116,11 +118,35 @@ const Dashboard = () => {
 
       <main className="container px-4 py-10 max-w-4xl">
         {/* Welcome */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <h1 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-2">
             Welcome back, <span className="text-gradient">{profile?.full_name || "Hustler"}</span> 👋
           </h1>
           <p className="text-muted-foreground">Your daily dose of AI-powered money-making strategies.</p>
+        </motion.div>
+
+        {/* Quick Stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="grid grid-cols-3 gap-3 mb-8"
+        >
+          <div className="glass rounded-xl p-4 text-center">
+            <BookOpen className="w-5 h-5 text-primary mx-auto mb-1" />
+            <p className="text-2xl font-bold text-foreground">{totalIssues}</p>
+            <p className="text-xs text-muted-foreground">Issues Received</p>
+          </div>
+          <div className="glass rounded-xl p-4 text-center">
+            <Flame className="w-5 h-5 text-primary mx-auto mb-1" />
+            <p className="text-2xl font-bold text-foreground">{(profile?.niche_interests || []).length}</p>
+            <p className="text-xs text-muted-foreground">Active Niches</p>
+          </div>
+          <div className="glass rounded-xl p-4 text-center">
+            <CalendarDays className="w-5 h-5 text-primary mx-auto mb-1" />
+            <p className="text-sm font-bold text-foreground">{memberSince}</p>
+            <p className="text-xs text-muted-foreground">Member Since</p>
+          </div>
         </motion.div>
 
         {/* Generate button */}
@@ -146,13 +172,9 @@ const Dashboard = () => {
               className="gradient-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity"
             >
               {generating ? (
-                <>
-                  <Loader2 className="mr-2 w-4 h-4 animate-spin" /> Generating...
-                </>
+                <><Loader2 className="mr-2 w-4 h-4 animate-spin" /> Generating...</>
               ) : (
-                <>
-                  Generate <Sparkles className="ml-2 w-4 h-4" />
-                </>
+                <>Generate <Sparkles className="ml-2 w-4 h-4" /></>
               )}
             </Button>
           </div>
@@ -165,10 +187,14 @@ const Dashboard = () => {
             animate={{ opacity: 1, y: 0 }}
             className="glass rounded-xl p-6 mb-8 glow-green-sm"
           >
-            <div className="flex items-center gap-2 mb-4">
-              <Sparkles className="w-5 h-5 text-primary" />
-              <h2 className="font-heading text-xl font-bold text-foreground">Your Personalized Hustle</h2>
-              <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full ml-auto">Just Generated</span>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-primary" />
+                <h2 className="font-heading text-xl font-bold text-foreground">Your Personalized Hustle</h2>
+              </div>
+              <Button variant="ghost" size="sm" onClick={() => setGeneratedHtml(null)} className="text-muted-foreground text-xs">
+                Close
+              </Button>
             </div>
             <div
               className="newsletter-content rounded-lg overflow-auto max-h-[600px] p-4"
@@ -182,7 +208,7 @@ const Dashboard = () => {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.15 }}
             className="glass rounded-xl p-6 mb-8"
           >
             <div className="flex items-center gap-2 mb-4">
@@ -210,37 +236,14 @@ const Dashboard = () => {
           </motion.div>
         )}
 
-        {/* Premium section (locked for free) */}
+        {/* Premium AI Insights */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="glass rounded-xl p-6 mb-8 relative overflow-hidden"
+          transition={{ delay: 0.2 }}
+          className="mb-8"
         >
-          {userTier === "free" && (
-            <div className="absolute inset-0 bg-background/60 backdrop-blur-sm z-10 flex items-center justify-center">
-              <div className="text-center">
-                <Crown className="w-8 h-8 text-primary mx-auto mb-2" />
-                <p className="font-heading font-bold text-foreground mb-1">Premium AI Insights</p>
-                <p className="text-sm text-muted-foreground mb-3">Upgrade to unlock advanced strategies</p>
-                <Button className="gradient-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity" onClick={() => navigate("/")}>
-                  Upgrade Now
-                </Button>
-              </div>
-            </div>
-          )}
-          <div className="flex items-center gap-2 mb-4">
-            <TrendingUp className="w-5 h-5 text-primary" />
-            <h2 className="font-heading text-xl font-bold text-foreground">Premium AI Insights</h2>
-          </div>
-          <div className="space-y-3">
-            {["Market Trend Analysis", "Revenue Prediction Model", "Competitor Gap Finder"].map((item) => (
-              <div key={item} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                <Sparkles className="w-4 h-4 text-primary" />
-                <span className="text-sm text-foreground">{item}</span>
-              </div>
-            ))}
-          </div>
+          <PremiumInsights tier={userTier} />
         </motion.div>
 
         {/* Archive */}
@@ -248,11 +251,11 @@ const Dashboard = () => {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: 0.25 }}
             className="glass rounded-xl p-6"
           >
             <h2 className="font-heading text-xl font-bold text-foreground mb-4">Newsletter Archive</h2>
-            <div className="space-y-3">
+            <div className="space-y-2">
               {newsletters.map((issue) => (
                 <div
                   key={issue.id}
