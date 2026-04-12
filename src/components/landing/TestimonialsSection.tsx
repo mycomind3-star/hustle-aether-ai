@@ -1,5 +1,6 @@
-import { motion } from "framer-motion";
-import { Star } from "lucide-react";
+import { motion, useInView } from "framer-motion";
+import { Star, Quote } from "lucide-react";
+import { useRef } from "react";
 import type { HomepageVariants } from "@/hooks/use-homepage-variants";
 
 const defaultTestimonials = [
@@ -14,6 +15,9 @@ interface TestimonialsSectionProps {
 }
 
 const TestimonialsSection = ({ variants, onTrack }: TestimonialsSectionProps) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-80px" });
+
   const testimonials = variants.testimonials.length > 0
     ? variants.testimonials.map((t) => ({
         text: t.text,
@@ -33,18 +37,22 @@ const TestimonialsSection = ({ variants, onTrack }: TestimonialsSectionProps) =>
       }));
 
   return (
-    <section id="testimonials" className="py-24 relative">
-      <div className="container px-4">
+    <section id="testimonials" className="py-28 relative">
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/[0.02] to-transparent" />
+
+      <div className="container px-4 relative z-10" ref={ref}>
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7 }}
+          className="text-center mb-20"
         >
-          <span className="text-primary text-sm font-semibold tracking-wider uppercase mb-3 block">
-            Success Stories
+          <span className="inline-flex items-center gap-2 glass-premium rounded-full px-4 py-1.5 mb-6">
+            <Star className="w-3.5 h-3.5 text-primary fill-primary" />
+            <span className="text-xs font-semibold text-primary uppercase tracking-wider">Success Stories</span>
           </span>
-          <h2 className="font-heading text-3xl md:text-5xl font-bold mb-4">
+          <h2 className="font-heading text-4xl md:text-6xl font-bold mb-5">
             Real People, <span className="text-gradient">Real Money</span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
@@ -52,34 +60,42 @@ const TestimonialsSection = ({ variants, onTrack }: TestimonialsSectionProps) =>
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {testimonials.map((t, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.15 }}
-              className="glass rounded-xl p-6 hover:glow-green-sm transition-shadow duration-500 flex flex-col"
+              initial={{ opacity: 0, y: 30, scale: 0.95 }}
+              animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+              transition={{ delay: 0.15 + i * 0.15, duration: 0.5 }}
+              whileHover={{ y: -6, transition: { duration: 0.3 } }}
+              className="glass-premium rounded-2xl p-7 flex flex-col relative overflow-hidden group"
               onMouseEnter={() => onTrack("button_click", { element: "testimonial", index: i }, t.id)}
             >
+              {/* Quote icon */}
+              <Quote className="w-10 h-10 text-primary/10 absolute top-4 right-4" />
+
+              {/* Revenue badge */}
+              <div className="inline-flex self-start items-center gap-1 bg-primary/10 rounded-full px-3 py-1 mb-5">
+                <span className="text-xs font-bold text-primary">{t.revenue}</span>
+                <span className="text-xs text-primary/60">earned</span>
+              </div>
+
               <div className="flex gap-1 mb-4">
                 {[...Array(5)].map((_, j) => (
                   <Star key={j} className="w-4 h-4 fill-primary text-primary" />
                 ))}
               </div>
-              <p className="text-secondary-foreground mb-6 leading-relaxed text-sm flex-1">"{t.text}"</p>
-              <div className="flex items-center justify-between pt-4 border-t border-border/50">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center text-sm font-bold text-primary-foreground">
-                    {t.avatar}
-                  </div>
-                  <div>
-                    <div className="font-semibold text-foreground text-sm">{t.name}</div>
-                    <div className="text-xs text-muted-foreground">{t.role}</div>
-                  </div>
+
+              <p className="text-secondary-foreground mb-8 leading-relaxed text-sm flex-1">"{t.text}"</p>
+
+              <div className="flex items-center gap-3 pt-5 border-t border-border/50">
+                <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center text-sm font-bold text-primary-foreground shadow-lg">
+                  {t.avatar}
                 </div>
-                <span className="text-primary font-heading font-bold text-sm">{t.revenue}</span>
+                <div>
+                  <div className="font-heading font-bold text-foreground">{t.name}</div>
+                  <div className="text-xs text-muted-foreground">{t.role}</div>
+                </div>
               </div>
             </motion.div>
           ))}
