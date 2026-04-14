@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import PremiumInsights from "@/components/dashboard/PremiumInsights";
 import HustleDnaScanner from "@/components/dashboard/HustleDnaScanner";
+import OpportunityRadar from "@/components/dashboard/OpportunityRadar";
 import { Progress } from "@/components/ui/progress";
 
 const tierConfig: Record<string, { label: string; icon: any; color: string; next?: string; progress: number }> = {
@@ -235,8 +236,13 @@ const Dashboard = () => {
           </motion.div>
         )}
 
-        {/* Hustle DNA Scanner — NEW */}
-        <motion.div {...fadeUp(0.18)} className="mb-8">
+        {/* Opportunity Radar */}
+        <motion.div {...fadeUp(0.17)} className="mb-8">
+          <OpportunityRadar />
+        </motion.div>
+
+        {/* Hustle DNA Scanner */}
+        <motion.div {...fadeUp(0.20)} className="mb-8">
           <HustleDnaScanner />
         </motion.div>
 
