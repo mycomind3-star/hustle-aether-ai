@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import PremiumInsights from "@/components/dashboard/PremiumInsights";
+import HustleDnaScanner from "@/components/dashboard/HustleDnaScanner";
 import { Progress } from "@/components/ui/progress";
 
 const tierConfig: Record<string, { label: string; icon: any; color: string; next?: string; progress: number }> = {
@@ -234,8 +235,13 @@ const Dashboard = () => {
           </motion.div>
         )}
 
-        {/* Premium AI Insights */}
-        <motion.div {...fadeUp(0.2)} className="mb-8">
+        {/* Hustle DNA Scanner — NEW */}
+        <motion.div {...fadeUp(0.18)} className="mb-8">
+          <HustleDnaScanner />
+        </motion.div>
+
+        {/* Premium AI Insights — now free for everyone */}
+        <motion.div {...fadeUp(0.22)} className="mb-8">
           <PremiumInsights tier={userTier} />
         </motion.div>
 
