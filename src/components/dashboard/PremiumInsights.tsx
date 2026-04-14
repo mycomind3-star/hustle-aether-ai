@@ -38,7 +38,7 @@ export default function PremiumInsights({ tier }: PremiumInsightsProps) {
   const [insights, setInsights] = useState<Insights | null>(null);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<"trends" | "predictions" | "gaps" | "strategy">("trends");
-  const isPaid = tier !== "free";
+  const isPaid = true; // All features are free!
 
   const generate = async () => {
     setLoading(true);
