@@ -10,6 +10,7 @@ import HustleDnaScanner from "@/components/dashboard/HustleDnaScanner";
 import OpportunityRadar from "@/components/dashboard/OpportunityRadar";
 import RevenueForecaster from "@/components/dashboard/RevenueForecaster";
 import CompetitorIntel from "@/components/dashboard/CompetitorIntel";
+import BusinessPlanBuilder from "@/components/dashboard/BusinessPlanBuilder";
 import { Progress } from "@/components/ui/progress";
 
 const tierConfig: Record<string, { label: string; icon: any; color: string; next?: string; progress: number }> = {
@@ -258,8 +259,13 @@ const Dashboard = () => {
           <HustleDnaScanner />
         </motion.div>
 
+        {/* Business Plan Builder */}
+        <motion.div {...fadeUp(0.26)} className="mb-8">
+          <BusinessPlanBuilder />
+        </motion.div>
+
         {/* Premium AI Insights — now free for everyone */}
-        <motion.div {...fadeUp(0.25)} className="mb-8">
+        <motion.div {...fadeUp(0.28)} className="mb-8">
           <PremiumInsights tier={userTier} />
         </motion.div>
 
