@@ -10,6 +10,7 @@ import HustleDnaScanner from "@/components/dashboard/HustleDnaScanner";
 import OpportunityRadar from "@/components/dashboard/OpportunityRadar";
 import RevenueForecaster from "@/components/dashboard/RevenueForecaster";
 import CompetitorIntel from "@/components/dashboard/CompetitorIntel";
+import BusinessPlanBuilder from "@/components/dashboard/BusinessPlanBuilder";
 import { Progress } from "@/components/ui/progress";
 
 const tierConfig: Record<string, { label: string; icon: any; color: string; next?: string; progress: number }> = {
