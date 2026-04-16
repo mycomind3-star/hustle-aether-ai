@@ -8,6 +8,8 @@ import { supabase } from "@/integrations/supabase/client";
 import PremiumInsights from "@/components/dashboard/PremiumInsights";
 import HustleDnaScanner from "@/components/dashboard/HustleDnaScanner";
 import OpportunityRadar from "@/components/dashboard/OpportunityRadar";
+import RevenueForecaster from "@/components/dashboard/RevenueForecaster";
+import CompetitorIntel from "@/components/dashboard/CompetitorIntel";
 import { Progress } from "@/components/ui/progress";
 
 const tierConfig: Record<string, { label: string; icon: any; color: string; next?: string; progress: number }> = {
@@ -241,13 +243,23 @@ const Dashboard = () => {
           <OpportunityRadar />
         </motion.div>
 
+        {/* Revenue Forecaster */}
+        <motion.div {...fadeUp(0.19)} className="mb-8">
+          <RevenueForecaster />
+        </motion.div>
+
+        {/* Competitor Intelligence */}
+        <motion.div {...fadeUp(0.21)} className="mb-8">
+          <CompetitorIntel />
+        </motion.div>
+
         {/* Hustle DNA Scanner */}
-        <motion.div {...fadeUp(0.20)} className="mb-8">
+        <motion.div {...fadeUp(0.23)} className="mb-8">
           <HustleDnaScanner />
         </motion.div>
 
         {/* Premium AI Insights — now free for everyone */}
-        <motion.div {...fadeUp(0.22)} className="mb-8">
+        <motion.div {...fadeUp(0.25)} className="mb-8">
           <PremiumInsights tier={userTier} />
         </motion.div>
 
