@@ -259,8 +259,13 @@ const Dashboard = () => {
           <HustleDnaScanner />
         </motion.div>
 
+        {/* Business Plan Builder */}
+        <motion.div {...fadeUp(0.26)} className="mb-8">
+          <BusinessPlanBuilder />
+        </motion.div>
+
         {/* Premium AI Insights — now free for everyone */}
-        <motion.div {...fadeUp(0.25)} className="mb-8">
+        <motion.div {...fadeUp(0.28)} className="mb-8">
           <PremiumInsights tier={userTier} />
         </motion.div>
 
