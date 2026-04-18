@@ -15,6 +15,8 @@ import BusinessPlanBuilder from "@/components/dashboard/BusinessPlanBuilder";
 import PricingOptimizer from "@/components/dashboard/PricingOptimizer";
 import ContentIdeaEngine from "@/components/dashboard/ContentIdeaEngine";
 import LaunchRoadmap from "@/components/dashboard/LaunchRoadmap";
+import SalesPageGenerator from "@/components/dashboard/SalesPageGenerator";
+import PersonaBuilder from "@/components/dashboard/PersonaBuilder";
 import { Progress } from "@/components/ui/progress";
 
 const tierConfig: Record<string, { label: string; color: string; next?: string; progress: number }> = {
@@ -249,6 +251,7 @@ const Dashboard = () => {
               <SectionHeader icon={Wrench} title="Build Your Business" subtitle="Validate, plan, and price your idea" />
               <RevenueForecaster />
               <PricingOptimizer />
+              <PersonaBuilder />
               <BusinessPlanBuilder />
               <LaunchRoadmap />
             </TabsContent>
@@ -258,6 +261,7 @@ const Dashboard = () => {
               <SectionHeader icon={TrendingUp} title="Grow & Scale" subtitle="Outsmart competitors, fuel content" />
               <CompetitorIntel />
               <ContentIdeaEngine />
+              <SalesPageGenerator />
             </TabsContent>
 
             {/* LIBRARY */}
