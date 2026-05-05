@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useSavedGenerations } from "@/hooks/use-saved-generations";
+import SavedGenerationsList from "./SavedGenerationsList";
 
 interface PricingResult {
   recommended_price: string;
@@ -24,6 +26,7 @@ const PricingOptimizer = () => {
   const [costBase, setCostBase] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<PricingResult | null>(null);
+  const { items, save, remove } = useSavedGenerations<{ product: string; audience: string; costBase: string; result: PricingResult }>("pricing_optimizer");
 
   const handleOptimize = async () => {
     if (!product.trim()) { toast.error("Describe your product first"); return; }
@@ -40,6 +43,11 @@ const PricingOptimizer = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSave = () => {
+    if (!result) return;
+    save(product || "Untitled pricing plan", { product, audience, costBase, result });
   };
 
   return (
@@ -63,6 +71,20 @@ const PricingOptimizer = () => {
       <Button onClick={handleOptimize} disabled={loading} className="w-full gradient-primary text-primary-foreground">
         {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Analyzing market…</> : <><Sparkles className="w-4 h-4 mr-2" /> Optimize Pricing</>}
       </Button>
+
+      <SavedGenerationsList
+        items={items}
+        canSave={!!result}
+        onSave={handleSave}
+        onLoad={(item) => {
+          setProduct(item.payload.product);
+          setAudience(item.payload.audience);
+          setCostBase(item.payload.costBase);
+          setResult(item.payload.result);
+        }}
+        onDelete={remove}
+        label="Saved pricing plans"
+      />
 
       <AnimatePresence>
         {result && (

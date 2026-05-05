@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useSavedGenerations } from "@/hooks/use-saved-generations";
+import SavedGenerationsList from "./SavedGenerationsList";
 
 interface RoadmapDay {
   day: number;
@@ -33,6 +35,7 @@ const LaunchRoadmap = () => {
   const [result, setResult] = useState<RoadmapResult | null>(null);
   const [completed, setCompleted] = useState<Set<number>>(new Set());
   const [activeWeek, setActiveWeek] = useState(1);
+  const { items, save, remove } = useSavedGenerations<{ idea: string; hours: string; result: RoadmapResult; completed: number[] }>("launch_roadmap");
 
   const handleGenerate = async () => {
     if (!idea.trim()) { toast.error("Enter your business idea"); return; }
@@ -59,6 +62,11 @@ const LaunchRoadmap = () => {
     setCompleted(next);
   };
 
+  const handleSave = () => {
+    if (!result) return;
+    save(idea || "Untitled 30-day roadmap", { idea, hours, result, completed: Array.from(completed) });
+  };
+
   const totalDays = result?.weeks.reduce((sum, w) => sum + w.days.length, 0) || 30;
   const progress = (completed.size / totalDays) * 100;
 
@@ -82,6 +90,21 @@ const LaunchRoadmap = () => {
       <Button onClick={handleGenerate} disabled={loading} className="w-full gradient-primary text-primary-foreground">
         {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Building plan…</> : <><Sparkles className="w-4 h-4 mr-2" /> Build My 30-Day Plan</>}
       </Button>
+
+      <SavedGenerationsList
+        items={items}
+        canSave={!!result}
+        onSave={handleSave}
+        onLoad={(item) => {
+          setIdea(item.payload.idea);
+          setHours(item.payload.hours);
+          setResult(item.payload.result);
+          setCompleted(new Set(item.payload.completed || []));
+          setActiveWeek(1);
+        }}
+        onDelete={remove}
+        label="Saved roadmaps (with progress)"
+      />
 
       <AnimatePresence>
         {result && (

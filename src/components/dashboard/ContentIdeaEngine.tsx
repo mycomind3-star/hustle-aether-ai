@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useSavedGenerations } from "@/hooks/use-saved-generations";
+import SavedGenerationsList from "./SavedGenerationsList";
 
 interface ContentResult {
   hooks: string[];
@@ -27,6 +29,7 @@ const ContentIdeaEngine = () => {
   const [tone, setTone] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ContentResult | null>(null);
+  const { items, save, remove } = useSavedGenerations<{ niche: string; tone: string; result: ContentResult }>("content_pack");
 
   const handleGenerate = async () => {
     if (!niche.trim()) { toast.error("Enter a niche or product"); return; }
@@ -50,6 +53,11 @@ const ContentIdeaEngine = () => {
     toast.success("Copied");
   };
 
+  const handleSave = () => {
+    if (!result) return;
+    save(niche || "Untitled content pack", { niche, tone, result });
+  };
+
   return (
     <div className="glass-premium rounded-2xl p-6">
       <div className="flex items-center gap-3 mb-5">
@@ -70,6 +78,19 @@ const ContentIdeaEngine = () => {
       <Button onClick={handleGenerate} disabled={loading} className="w-full gradient-primary text-primary-foreground">
         {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Brainstorming…</> : <><Sparkles className="w-4 h-4 mr-2" /> Generate Content Pack</>}
       </Button>
+
+      <SavedGenerationsList
+        items={items}
+        canSave={!!result}
+        onSave={handleSave}
+        onLoad={(item) => {
+          setNiche(item.payload.niche);
+          setTone(item.payload.tone);
+          setResult(item.payload.result);
+        }}
+        onDelete={remove}
+        label="Saved content packs"
+      />
 
       <AnimatePresence>
         {result && (
