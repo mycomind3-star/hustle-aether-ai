@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { Helmet } from "react-helmet-async";
 
 const NICHE_OPTIONS = [
   "AI Tools", "Crypto", "Dropshipping", "Freelancing", "Content Creation",
@@ -80,6 +81,11 @@ const Preferences = () => {
 
   return (
     <div className="min-h-screen gradient-dark">
+      <Helmet>
+        <title>Your Preferences · AetherHustle AI</title>
+        <meta name="description" content="Customize your niches, risk tolerance and experience level so AetherHustle AI tailors strategies to your goals." />
+        <link rel="canonical" href="https://hustle-aether-ai.lovable.app/preferences" />
+      </Helmet>
       <header className="border-b border-border glass-strong sticky top-0 z-50">
         <div className="container px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -101,8 +107,9 @@ const Preferences = () => {
 
           {/* Name */}
           <div className="glass rounded-xl p-6 mb-6">
-            <h3 className="font-heading font-bold text-foreground mb-3">Display Name</h3>
+            <h2 className="font-heading font-bold text-foreground mb-3">Display Name</h2>
             <Input
+              aria-label="Display name"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="Your name"
@@ -112,7 +119,7 @@ const Preferences = () => {
 
           {/* Niche Interests */}
           <div className="glass rounded-xl p-6 mb-6">
-            <h3 className="font-heading font-bold text-foreground mb-3">Niche Interests</h3>
+            <h2 className="font-heading font-bold text-foreground mb-3">Niche Interests</h2>
             <p className="text-sm text-muted-foreground mb-4">Select topics you want personalized strategies for.</p>
             <div className="flex flex-wrap gap-2">
               {NICHE_OPTIONS.map((niche) => (
@@ -133,7 +140,7 @@ const Preferences = () => {
 
           {/* Risk Level */}
           <div className="glass rounded-xl p-6 mb-6">
-            <h3 className="font-heading font-bold text-foreground mb-3">Risk Tolerance</h3>
+            <h2 className="font-heading font-bold text-foreground mb-3">Risk Tolerance</h2>
             <div className="flex gap-2">
               {["low", "medium", "high", "aggressive"].map((level) => (
                 <button
@@ -153,7 +160,7 @@ const Preferences = () => {
 
           {/* Experience Level */}
           <div className="glass rounded-xl p-6 mb-8">
-            <h3 className="font-heading font-bold text-foreground mb-3">Experience Level</h3>
+            <h2 className="font-heading font-bold text-foreground mb-3">Experience Level</h2>
             <div className="flex gap-2">
               {["beginner", "intermediate", "advanced", "expert"].map((level) => (
                 <button
