@@ -184,6 +184,8 @@ const HeroSection = ({ variants, onTrack }: HeroSectionProps) => {
                 alt="AetherHustle AI Dashboard showing financial analytics and AI-powered insights"
                 width={1280}
                 height={800}
+                fetchPriority="high"
+                decoding="async"
                 className="rounded-xl w-full h-auto"
               />
 

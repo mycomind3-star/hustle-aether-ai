@@ -18,6 +18,7 @@ import LaunchRoadmap from "@/components/dashboard/LaunchRoadmap";
 import SalesPageGenerator from "@/components/dashboard/SalesPageGenerator";
 import PersonaBuilder from "@/components/dashboard/PersonaBuilder";
 import { Progress } from "@/components/ui/progress";
+import { Helmet } from "react-helmet-async";
 
 const tierConfig: Record<string, { label: string; color: string; next?: string; progress: number }> = {
   free: { label: "Free", color: "bg-secondary text-secondary-foreground", next: "Basic", progress: 33 },
@@ -132,16 +133,21 @@ const Dashboard = () => {
                 <Shield className="w-3 h-3 mr-1" /> Admin
               </Button>
             )}
-            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground" onClick={() => navigate("/preferences")}>
+            <Button aria-label="Open preferences" variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground" onClick={() => navigate("/preferences")}>
               <Settings className="w-4 h-4" />
             </Button>
-            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground" onClick={handleLogout}>
+            <Button aria-label="Log out" variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground" onClick={handleLogout}>
               <LogOut className="w-4 h-4" />
             </Button>
           </div>
         </div>
       </header>
 
+      <Helmet>
+        <title>Dashboard · AetherHustle AI</title>
+        <meta name="description" content="Your AetherHustle AI command center: discover opportunities, build a business plan, optimize pricing and grow with AI." />
+        <link rel="canonical" href="https://hustle-aether-ai.lovable.app/dashboard" />
+      </Helmet>
       <main className="container px-4 py-8 max-w-6xl">
         {/* Hero welcome */}
         <motion.div {...fadeUp(0)} className="mb-8 relative overflow-hidden rounded-2xl glass-hero p-6 md:p-8">
