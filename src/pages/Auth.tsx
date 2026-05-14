@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useState, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -56,7 +57,12 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen gradient-dark flex items-center justify-center px-4 relative overflow-hidden">
+    <main className="min-h-screen gradient-dark flex items-center justify-center px-4 relative overflow-hidden">
+      <Helmet>
+        <title>Sign in or sign up · AetherHustle AI</title>
+        <meta name="description" content="Sign in or create your AetherHustle AI account to access personalized AI-curated money-making strategies." />
+        <link rel="canonical" href="https://hustle-aether-ai.lovable.app/auth" />
+      </Helmet>
       {/* Background effects */}
       <div className="absolute inset-0 grid-pattern opacity-10" />
       <motion.div
@@ -96,9 +102,9 @@ const Auth = () => {
               <span className="font-heading text-xl font-bold text-foreground">AetherHustle AI</span>
             </div>
 
-            <h2 className="font-heading text-2xl font-bold text-foreground text-center mb-1">
+            <h1 className="font-heading text-2xl font-bold text-foreground text-center mb-1">
               {isLogin ? "Welcome Back" : "Join the Hustle"}
-            </h2>
+            </h1>
             <p className="text-muted-foreground text-center text-sm mb-8">
               {isLogin ? "Sign in to access your dashboard" : "Create your account and start earning"}
             </p>
@@ -107,16 +113,16 @@ const Auth = () => {
               {!isLogin && (
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} className="pl-10 bg-muted border-border text-foreground placeholder:text-muted-foreground" />
+                  <Input aria-label="Full name" placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} className="pl-10 bg-muted border-border text-foreground placeholder:text-muted-foreground" />
                 </div>
               )}
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="pl-10 bg-muted border-border text-foreground placeholder:text-muted-foreground" required />
+                <Input aria-label="Email address" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="pl-10 bg-muted border-border text-foreground placeholder:text-muted-foreground" required />
               </div>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="pl-10 bg-muted border-border text-foreground placeholder:text-muted-foreground" required minLength={6} />
+                <Input aria-label="Password" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="pl-10 bg-muted border-border text-foreground placeholder:text-muted-foreground" required minLength={6} />
               </div>
               <Button type="submit" disabled={loading} className="w-full gradient-primary text-primary-foreground font-semibold py-6 hover:opacity-90 transition-opacity text-base">
                 {loading ? <><Loader2 className="mr-2 w-4 h-4 animate-spin" /> Loading...</> : isLogin ? "Sign In" : "Create Account"}
@@ -137,7 +143,7 @@ const Auth = () => {
           </div>
         </div>
       </motion.div>
-    </div>
+    </main>
   );
 };
 

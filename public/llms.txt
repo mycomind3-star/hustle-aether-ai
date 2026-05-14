@@ -1,0 +1,10 @@
+# AetherHustle AI
+
+> Personalized, AI-curated money-making strategies delivered daily. Discover, validate, build and scale ideas with AI-powered tools.
+
+## Pages
+
+- [Home](/): Landing page with features, pricing and testimonials.
+- [Sign in / Sign up](/auth): Create an account or sign in.
+- [Dashboard](/dashboard): AI tools to discover opportunities, build a business plan and grow.
+- [Preferences](/preferences): Customize niches, risk tolerance and experience level.
